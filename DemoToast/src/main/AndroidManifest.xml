@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" /> <!-- Version 11 -->
+    <!-- Request legacy Bluetooth permissions on older devices. -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <!--
+If your app targets Android 9 (API level 28) or lower, you can declare the
+    ACCESS_COARSE_LOCATION permission instead of the ACCESS_FINE_LOCATION permission.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--
+Android 11 and lower, a Bluetooth scan could potentially be used to gather information
+    about the location of the user
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Bluetooth Low Energy, -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="true" /> <!-- Version 12 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <!--
+ Required only when requesting background LOCATION access on
+          Android 10 (API level 29) and higher.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 </manifest>
