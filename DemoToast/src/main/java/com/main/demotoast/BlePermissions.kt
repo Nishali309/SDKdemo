@@ -1,4 +1,4 @@
-package com.main
+package com.main.demotoast
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -17,7 +17,6 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.os.ParcelUuid
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -26,7 +25,6 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
-import com.main.demotoast.ScanDataModel
 
 public class BlePermissions {
     companion object {
