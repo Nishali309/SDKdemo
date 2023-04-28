@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.*
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Context.BLUETOOTH_SERVICE
@@ -14,6 +15,9 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.ParcelUuid
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -22,17 +26,17 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
+import com.main.demotoast.ScanDataModel
 
 public class BlePermissions {
     companion object {
         private var blePermissions: BlePermissions? = null
 
-        fun get(): BlePermissions {
-            if (blePermissions == null) {
-                blePermissions = BlePermissions()
-            }
-            return blePermissions as BlePermissions
-        }
+        private var bleScanner: BluetoothLeScanner? = null
+        private val handler = Handler(Looper.getMainLooper())
+        val devicesList = arrayListOf<ScanDataModel>()
+        private var filters: ArrayList<ScanFilter> = arrayListOf()
+        private var scanSettings: ScanSettings? = null
 
         val LOCATION_PERMISSION_REQ_CODE = 111
         val BACKGROUND_LOCATION_PERMISSION_CODE = 2
@@ -112,28 +116,11 @@ public class BlePermissions {
                 return false
             }
             Log.e(TAG, "isBleScanConditionSatisfy() : True.......")
-            Toast.makeText(context,"Permission succesfully allowed",Toast.LENGTH_SHORT).show()
-            return isBleScanConditionSatisfy
-        }
+//            Toast.makeText(context,"Permission succesfully allowed",Toast.LENGTH_SHORT).show()
 
-        fun askPermissionForBackgroundUsage(context: Activity) {
-            androidx.appcompat.app.AlertDialog.Builder(context)
-                .setTitle("Permission Needed!")
-                .setMessage("Location Permission Needed!")
-                .setMessage(
-                    "This App collects location data " +
-                            "to match it to air quality data " +
-                            "even when the app is closed " +
-                            "or not in use but only when " +
-                            "an Airlib sensor is connected " +
-                            "via Bluetooth."
-                )
-                .setPositiveButton("OK") { dialog, which ->
-                    dialog.dismiss()
-//                    booleanForPermition = true
-//                    isBleScanConditionSatisfy(context)
-                }
-                .create().show()
+            startScan()
+
+            return isBleScanConditionSatisfy
         }
 
         fun isBluetoothPermissionAllowed(context: Context): Boolean? {
@@ -252,10 +239,85 @@ public class BlePermissions {
             return true
         }
 
-    }
+        @SuppressLint("MissingPermission")
+        open fun startScan() {
+            //AppLog.e(TAG,"Start Scan")
+            Log.e(TAG , "INSIDE SATRTSCAN OF BLE SERVICE")
+            bleScanner = BluetoothAdapter.getDefaultAdapter().bluetoothLeScanner
 
-    interface ListenerPermission {
-        fun successPermission()
-    }
+            clearData()
 
+            filters.clear()
+
+            scanSettings =
+                ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build()
+
+            try {//00:4D:32:0F:04:23
+//            val builder = ScanFilter.Builder()
+//            //  //AppLog.e(TAG, "action UUID 3rd" + uuid)
+//            builder.setServiceUuid(ParcelUuid.fromString(uuid))
+////            builder.setDeviceAddress("00:4D:32:0F:04:23")
+//            filters.add(builder.build())
+                Log.e(TAG,"onScanResult DEVICE FOUND : INSIDE SCAN")
+            } catch (ex: java.lang.Exception) {
+                //AppLog.e(
+//                TAG,
+//                "action2 serviceUUIDFilter Exception : $ex"
+//            )
+            }
+
+
+            // //AppLog.e(TAG,"scanmode")
+            scanSettings =
+                ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build()
+
+            bleScanner?.startScan(null, scanSettings, scanCallback)
+
+            /*val intent = Intent(ScanEvent.SCAN_START.toString())
+            intent.putExtra("start","ble")
+            intent.putExtra("packagename", context.getPackageName())
+            context.sendBroadcast(intent)
+            Log.e(TAG, "start scan intent")*/
+//        //AppLog.e(TAG, "scanner " + bleScanner)
+        }
+
+        private fun clearData() {
+            devicesList.clear()
+        }
+
+        var scanCallback = object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                super.onScanResult(callbackType, result)
+                Log.e(TAG,"onScanResult DEVICE FOUND : "+ result)
+                result?.let {
+//                parseBLEFrame(it.device, it.rssi, result)
+                }
+
+            }
+
+            override fun onScanFailed(errorCode: Int) {
+                //AppLog.e(TAG,"scan Fail"+errorCode)
+                super.onScanFailed(errorCode)
+                //AppLog.addDebugStatusLog("ON SCAN FAILED")
+                when (errorCode) {
+                    SCAN_FAILED_ALREADY_STARTED ->{
+
+                    }
+
+                }
+                /*val intent = Intent(ScanEvent.SCAN_FAIL.toString())
+                intent.putExtra("packagename", context.getPackageName())
+                intent.putExtra("errorCode", errorCode)
+                contextt?.sendBroadcast(intent)*/
+            }
+
+
+        }
+
+        interface ListenerPermission {
+            fun successPermission()
+        }
+
+
+    }
 }
