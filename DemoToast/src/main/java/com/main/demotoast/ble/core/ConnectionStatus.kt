@@ -1,0 +1,13 @@
+package com.urbitdemo.main.ble.core
+
+enum class ConnectionStatus {
+    DEVICE_CONNECTING,
+    DEVICE_CONNECTED,
+    DEVICE_PAIRED,
+    DEVICE_DISCONNECTED,
+    DEVICE_FOUND,
+    OUT_OF_RANGE,
+    CONNECTION_FAILED,
+    ALREADY_CONNECTED,
+    STATE_BLUETOOTH
+}

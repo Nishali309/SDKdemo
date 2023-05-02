@@ -9,7 +9,7 @@ object AppLog {
 
     fun e(TAG: String, msg: String?) {
         if (BuildConfig.DEBUG) {
-            //AppLog.e(TAG, msg!!)
+            Log.e(TAG, msg!!)
         }
     }
 
