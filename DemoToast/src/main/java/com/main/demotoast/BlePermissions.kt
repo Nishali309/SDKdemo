@@ -131,6 +131,15 @@ public class BlePermissions {
             return isBleScanConditionSatisfy
         }
 
+        fun readServiceData1(serUUID: String, charUUID: String){
+//            BleActor.readServiceDATA(BleService.INFO_SERVICE_UUID, BleService.FW_CHAR_UUID)
+            BleActor.bleActor?.readServiceData(serUUID, charUUID)
+        }
+
+        fun writeServiceData1(serUUID: String, charUUID: String,data: ByteArray?, attempt: Int){
+            BleActor.bleActor?.writeServiceData(serUUID, charUUID,data,1)
+        }
+
         fun isBluetoothPermissionAllowed(context: Context): Boolean? {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 hasPermission(
@@ -302,7 +311,7 @@ public class BlePermissions {
             devicesList.clear()
         }
 
-        fun connectDevice(macAddress: String, context: Context): BleActor? {
+        fun connectDevice(macAddress: String, context: Context,listener: ListenerDevice): BleActor? {
             val device = devicesList.find { it.macAddress == macAddress } ?: return null
             var baseBleActor = actors[macAddress]
 
@@ -312,11 +321,12 @@ public class BlePermissions {
                 object : BleActor.BleConnectionListener {
                     override fun onConnected(macAddress: String?) {
                         Log.e(TAG, "STATUS1 onConnected : $macAddress")
-                        Toast.makeText(context,"Successfully Connected to : " + macAddress , Toast.LENGTH_SHORT).show()
+                        listener.ListenerMessage("Connected ")
                     }
 
                     override fun onDisconnected(bleScanDevice: BLEScanDevice) {
                         Log.e(TAG, "STATUS1 onDisconnected : ${bleScanDevice.macAddress}")
+                        listener.ListenerMessage("DisConnected ")
                     }
 
                     override fun onServiceDiscovered(macAddress: String?) {
@@ -341,7 +351,10 @@ public class BlePermissions {
                         data: ByteArray
                     ) {
                         super.onCharacteristicRead(bleScanDevice, gatt, characteristic, data)
-
+                        Log.e(
+                            TAG,
+                            "STATUS1 onCharacteristicRead " + Utils.byteToString(data)
+                        )
                     }
 
                     override fun onCharacteristicWrite(
@@ -349,7 +362,11 @@ public class BlePermissions {
                     ) {
                         Log.e(
                             TAG,
-                            "STATUS1 onCharacteristicWrite " + Utils.bytesToHex(characteristic?.value)
+                            "STATUS1 onCharacteristicWrite " + characteristic?.value?.let {
+                                Utils.byteToString(
+                                    it
+                                )
+                            }
                         )
 
                     }
@@ -383,6 +400,8 @@ public class BlePermissions {
 
         interface ListenerDevice {
             fun successDeviceFound(macAddress: BLEScanDevice)
+            fun ListenerMessage(msg: String)
+//            fun ReadChar(msg: String)
         }
 
 

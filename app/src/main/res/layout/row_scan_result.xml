@@ -49,9 +49,22 @@
             android:elevation="10dp"
             android:text="Connect"
             app:layout_constraintBottom_toBottomOf="@id/tvMacAddress"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnRead"
             app:layout_constraintTop_toTopOf="@id/tvDeviceName"
              />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:elevation="10dp"
+            android:text="Read"
+            app:layout_constraintBottom_toBottomOf="@id/tvMacAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvDeviceName"
+            />
 
         <View
             android:layout_width="match_parent"

@@ -31,6 +31,16 @@ object Utils {
         return String(hexChars)
     }
 
+    fun byteToString(byte: ByteArray): String {
+        /*val bytes = byteArrayOf(byte)
+        if (bytes == null || bytes.size == 0) {
+            return ""
+        }*/
+        val str = String(byte, StandardCharsets.UTF_8);
+
+        return str
+    }
+
     fun bytesToHex(bytes: ByteArray?): String {
         if (bytes == null || bytes.size == 0) {
             return ""

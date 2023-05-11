@@ -3,6 +3,7 @@ package com.urbitdemo.main.ble.core
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.BroadcastReceiver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -36,6 +37,10 @@ class BleActor(private val mContext: Context, var listener: BleConnectionListene
 
     var isAlreadyPaired = false
 
+    companion object {
+
+        var bleActor: BleActor? = null
+    }
 
     /**
      * Disconnect current device.
@@ -59,6 +64,7 @@ class BleActor(private val mContext: Context, var listener: BleConnectionListene
      * Set device in Actor
      */
     fun setDevice(device: BLEScanDevice?, isFromMessage: Boolean) {
+        bleActor = this
         bleDevice = device
         bluetoothDevice = device!!.bluetoothDevice
         this.isFromMessage = isFromMessage
@@ -600,8 +606,4 @@ class BleActor(private val mContext: Context, var listener: BleConnectionListene
         }
     }
 
-    companion object {
-        private val TAG = BleActor::class.java.simpleName
-//        var bleActor: BleActor? = null
-    }
 }

@@ -57,6 +57,13 @@ class ScanDevicesAdapter(listener: Listener) :
                         btnConnect.setBackgroundColor(Color.GRAY)
                         listener?.onItemClick(position,devices[position])
                 }
+
+                btnRead.setOnClickListener {
+
+                        Log.e(TAG, "GGGGGgggggggggggggggg")
+                        btnRead.setBackgroundColor(Color.GRAY)
+                        listener?.onItemClickRead(position,devices[position])
+                }
             }
         }
     }
@@ -102,5 +109,6 @@ class ScanDevicesAdapter(listener: Listener) :
 
     interface Listener {
         fun onItemClick(position: Int,deviceModel: BLEScanDevice)
+        fun onItemClickRead(position: Int,deviceModel: BLEScanDevice)
     }
 }

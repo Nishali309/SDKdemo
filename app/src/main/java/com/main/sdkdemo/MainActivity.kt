@@ -6,9 +6,9 @@ import android.os.Handler
 import android.os.Looper
 import android.service.controls.ControlsProviderService
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.main.sdkdemo.ScanDevicesAdapter
 import com.main.demotoast.BlePermissions
 import com.urbitdemo.main.ble.model.BLEScanDevice
 
@@ -17,6 +17,9 @@ class MainActivity : AppCompatActivity(), BlePermissions.Companion.ListenerDevic
 
     lateinit var recView: RecyclerView
     val devicesList = arrayListOf<BLEScanDevice>()
+    val SERVICE_UUID = "C21881E5-4E2C-4F7B-BC50-9E82A8910C14"
+    val READ_SERVICE_UUID = "C8FA78D2-7B06-44CA-8A47-70748AA63E57"
+    val WRITE_SERVICE_UUID = "24811361-BCAB-4B94-B6F7-DBA39DC1B67D"
 
     companion object {
         var adapter: ScanDevicesAdapter? = null
@@ -100,14 +103,30 @@ class MainActivity : AppCompatActivity(), BlePermissions.Companion.ListenerDevic
             if (adapter != null) {
                 adapter!!.add(bleDevice)
             }
-        }, 20000)
+        }, 100)
+
+    }
+
+    override fun ListenerMessage(msg: String) {
+
+        this.runOnUiThread(Runnable {
+            Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
+        })
 
     }
 
     override fun onItemClick(position: Int, deviceModel: BLEScanDevice) {
         Log.e(ControlsProviderService.TAG, "GGGGGgggggggggggggggg")
 
-        BlePermissions.connectDevice(deviceModel.macAddress.toString(), this)
+//        BlePermissions.readServiceData1()
+        BlePermissions.connectDevice(deviceModel.macAddress.toString(), this, this)
+    }
+
+    override fun onItemClickRead(position: Int, deviceModel: BLEScanDevice) {
+//        BlePermissions.readServiceData1(SERVICE_UUID, READ_SERVICE_UUID)
+
+        val bytes = byteArrayOf(0x48, 101, 108, 108, 111)
+        BlePermissions.writeServiceData1(SERVICE_UUID, WRITE_SERVICE_UUID, bytes, 1)
     }
 
 }
